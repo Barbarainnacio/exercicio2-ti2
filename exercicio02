@@ -1,64 +1,44 @@
-package com.ti2cc;
+public class Main {
 
-import java.util.List;
-import java.util.Scanner;
+    public static void main(String[] args) 
+    {
+        Carro carro = new Carro();  
+        DAO dao = new DAO();
+        dao.conectar();
+        int opcao;
+        System.out.println("MENU:\n");
+        System.out.println("OPÇÕES:\n");
+        System.out.println(
+                "1-listar\n" + "2-Inserir\n" + "3-Excluir\n" + "4-Atualizar\n" + "5-Sair\n");
+        opcao = MyIO.readInt();
+        switch (opcao) {
+            case 1:
+                // Mostrar usuários
+                Carro[] carros = dao.getCarros();
+                System.out.println("==== Mostrar usuários === ");
+                for (int i = 0; i < carros.length; i++) {
+                    System.out.println(carros[i].toString());
+                }
+            case 2:
+                // Inserir um elemento na tabela
+                if (dao.inserirCarro(carro) == true) {
+                    System.out.println("Inserção com sucesso -> " + carro.toString());
+                }
+            case 3:
+                // Excluir usuário
+                dao.excluirCarro(carro.getId());
+                break;
+            case 4:
+                // Atualizar usuário
+                carro.setModelo("picape");
+                dao.atualizarCarro(carro);
+            case 5:
+                dao.close();
+                break;
 
-import dao.DAO;
-import dao.VeiculoDAO;
-import model.Veiculo;
-
-public class Principal {
-	
-	public static void main(String[] args) throws Exception {
-		Scanner sc = new Scanner(System.in, "UTF-8");
-		VeiculoDAO veiculoDAO = new VeiculoDAO();
-		
-		String options = "";
-		
-		
-		String menu = "DIGITE: 1 PARA LISTAR \n 2 PARA INSERIR \n 3 PARA EXCLUIR \n 0 PARA SAIR";
-		System.out.println(menu);
-		options = sc.nextLine();
-		
-		switch(options) {
-			case "1":
-				listaVeiculos(veiculoDAO);
-				break;
-			case "2":
-				inseriVeiculos(veiculoDAO, sc);
-				break;
-			case "3":
-				excluiVeiculo(veiculoDAO, sc);
-				break;
-			default:
-				break;
-		}
-	}
-	
-	static void inseriVeiculos(VeiculoDAO veiculoDAO, Scanner sc) {
-		System.out.println("\n\n==== Inserir veiculo === ");
-		System.out.println("Insira a placa:");
-		String placa = sc.nextLine();
-		System.out.println("Insira a marca:");
-		String marca = sc.nextLine();
-		System.out.println("Insira o motor:");
-		String motor = sc.nextLine();
-		Veiculo veiculo = new Veiculo(3, placa, marca, motor);
-		if(veiculoDAO.insert(veiculo) == true) {
-			System.out.println("Inserção com sucesso -> " + veiculo.toString());
-		}
-	}
-	static void listaVeiculos(VeiculoDAO veiculoDAO) {
-		System.out.println("\n\n==== Lista veiculos === ");
-		List<Veiculo> veiculos = veiculoDAO.get();
-		for (Veiculo u: veiculos) {
-			System.out.println(u.toString());
-		}
-	}
-	static void excluiVeiculo(VeiculoDAO veiculoDAO, Scanner sc) {
-		System.out.println("\n\n==== Excluir Veiculo ==== ");
-		System.out.println("Insira o codigo do veiculo a ser excluido:");
-		String codigo = sc.nextLine();
-		veiculoDAO.delete(Integer.parseInt(codigo));
-	}
+            default:
+                break;
+        }
+        dao.close();
+    }
 }
